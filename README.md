@@ -7,6 +7,8 @@ Logic-RL: Unleashing LLM Reasoning with Rule-Based Reinforcement Learning
 ---
 
 ## News
+[2025/03/20] We release the [ADORA: A Scalable Paradigm for Steering Learning Trajectories ](https://github.com/ShadeCloak/ADORA?tab=readme-ov-file).
+
 [2025/03/19] For stable length control, refer to https://github.com/lblankl/Short-RL
 
 <table>
