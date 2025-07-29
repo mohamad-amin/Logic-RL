@@ -74,7 +74,7 @@ def parse_model_answer(answer_text: str, expected_names: list) -> Optional[Dict[
     
     for name in expected_names:
         pattern = re.compile(
-            rf'\b{re.escape(name)}\b.*?\b(knight|knave)\b', 
+            rf'\b{re.escape(name)}\b.*?\b(knight|knave)\b',
             re.IGNORECASE
         )
         match = pattern.search(answer_text)
@@ -103,6 +103,7 @@ def validate_response_structure(processed_str: str) -> bool:
 
     # Check required tags
     tags = {
+        'think_start': ('<think>', 1),
         'think_end': ('</think>', 1),
         'answer_start': ('<answer>', 1),
         'answer_end': ('</answer>', 1)
