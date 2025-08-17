@@ -1,8 +1,9 @@
-sset -x
-MODEL_PATH=Qwen/Qwen3-1.7B
+#sset -x
+#MODEL_PATH=Qwen/Qwen3-1.7B
+MODEL_PATH=~/scratch/projects/hf_home/hub/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e
 #MODEL_PATH=run_0.6b_5678ppl_post_sft/global_step_1250/actor
 #MODEL_PATH=sft_idk_1.7b_5678ppl_unsolved/global_step_44
-export VLLM_ATTENTION_BACKEND=XFORMERS
+#export VLLM_ATTENTION_BACKEND=XFORMERS
 python3 -u -m verl.trainer.main_ppo \
     algorithm.adv_estimator=grpo \
     algorithm.norm_adv_by_std_in_grpo=False \
@@ -23,7 +24,7 @@ python3 -u -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.kl_loss_type=low_var_kl \
     actor_rollout_ref.model.enable_gradient_checkpointing=False \
     actor_rollout_ref.actor.fsdp_config.param_offload=False \
-    actor_rollout_ref.actor.fsdp_config.optimizer_offload=False \
+    actor_rollout_ref.actor.fsdp_config.optimizer_offload=True \
     actor_rollout_ref.rollout.log_prob_micro_batch_size=64 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
     actor_rollout_ref.rollout.name=vllm \
@@ -36,20 +37,19 @@ python3 -u -m verl.trainer.main_ppo \
     trainer.critic_warmup=0 \
     trainer.logger=['wandb'] \
     trainer.project_name='GRPO_logic_KK' \
-    trainer.experiment_name='Qwen3-1.7B-5678ppl-hard-xlarge-hesitate-bs16-noformat-h100' \
-    trainer.n_gpus_per_node=8 \
+    trainer.experiment_name='Qwen3-1.7B-5678ppl-hard-xlarge-hesitate-bs16-noformat-a100' \
+    trainer.n_gpus_per_node=4 \
     trainer.nnodes=1 \
-    trainer.default_local_dir=run_1.7b_5678ppl_hard_xlarge_hesitate_bs16_noformat_h100 \
+    trainer.default_local_dir=run_1.7b_5678ppl_hard_xlarge_hesitate_bs16_noformat_a100 \
     trainer.default_hdfs_dir=null \
     trainer.save_freq=250 \
     trainer.test_freq=100 \
     trainer.val_before_train=True \
     custom_reward_function.path=verl/utils/reward_score/kk.py \
     custom_reward_function.name=compute_score \
-    +custom_reward_function.reward_kwargs.format_reward=0.0 \
+    +custom_reward_function.reward_kwargs.format_reward=0.5 \
     +custom_reward_function.reward_kwargs.answer_reward=1.0 \
     +custom_reward_function.reward_kwargs.hesitation_reward=0.25 \
     +custom_reward_function.reward_kwargs.partial_answer_reward=0.0 \
     +custom_reward_function.reward_kwargs.wrong_answer_reward=0.0 \
-    trainer.total_epochs=1 $@ 2>&1 | tee grpo_1.7b_hard_large_hesitate_bs16_noformat_h100.log
-
+    trainer.total_epochs=1 $@ 2>&1 | tee grpo_1.7b_hard_large_hesitate_bs16_noformat_a100.log
